@@ -23,6 +23,7 @@ fun ItemAdd(itemsViewModel: ItemsViewModel) {
         Button(onClick = {
             Log.d("ItemAdd", "add item with text = $text");
             itemsViewModel.addItem(text)
+            text = ""
         }) { Text("Add") }
     }
 }

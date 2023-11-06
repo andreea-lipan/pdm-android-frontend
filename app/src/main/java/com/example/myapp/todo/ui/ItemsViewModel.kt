@@ -5,6 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.myapp.todo.data.Item
 
+data class ItemsUiState(val items: List<Item>)
+
 class ItemsViewModel : ViewModel() {
     companion object {
         val TAG = "ItemsViewModel"
