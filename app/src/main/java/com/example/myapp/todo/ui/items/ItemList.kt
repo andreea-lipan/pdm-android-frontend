@@ -8,6 +8,8 @@ import androidx.compose.foundation.text.ClickableText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.sp
 import com.example.myapp.todo.data.Item
 
 typealias OnItemFn = (id: String) -> Unit
@@ -15,7 +17,7 @@ typealias OnItemFn = (id: String) -> Unit
 @Composable
 fun ItemList(itemList: List<Item>, onItemClick: OnItemFn, modifier: Modifier) {
     Log.d("ItemList", "recompose")
-    LazyColumn {
+    LazyColumn(modifier = modifier) {
         items(itemList) { item ->
             ItemDetail(item, onItemClick)
         }
@@ -26,6 +28,9 @@ fun ItemList(itemList: List<Item>, onItemClick: OnItemFn, modifier: Modifier) {
 fun ItemDetail(item: Item, onItemClick: OnItemFn) {
     Log.d("ItemDetail", "recompose id = ${item.id}")
     Row {
-        ClickableText(text = AnnotatedString(item.text), onClick = { onItemClick(item.id) })
+        ClickableText(text = AnnotatedString(item.text),
+            style = TextStyle(
+                fontSize = 24.sp,
+            ), onClick = { onItemClick(item.id) })
     }
 }

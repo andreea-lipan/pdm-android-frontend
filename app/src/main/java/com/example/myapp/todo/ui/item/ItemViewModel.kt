@@ -7,7 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.myapp.todo.data.Item
-import com.example.myapp2.todo.data.ItemRepository
+import com.example.myapp.todo.data.ItemRepository
 
 data class ItemUiState(val item: Item?)
 
