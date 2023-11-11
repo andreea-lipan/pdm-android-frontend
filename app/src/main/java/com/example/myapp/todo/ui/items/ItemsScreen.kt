@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -19,9 +20,9 @@ import com.example.myapp.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ItemsScreen(onItemClick: (id: String) -> Unit) {
-    Log.d("TodoScreen", "recompose")
-    val itemsViewModel = viewModel<ItemsViewModel>()
+fun ItemsScreen(onItemClick: (id: String?) -> Unit, onAddItem: () -> Unit) {
+    Log.d("ItemsScreen", "recompose")
+    val itemsViewModel = viewModel<ItemsViewModel>(factory = ItemsViewModel.Factory)
     val itemsUiState = itemsViewModel.uiState
     Scaffold(
         topBar = {
@@ -30,21 +31,31 @@ fun ItemsScreen(onItemClick: (id: String) -> Unit) {
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    Log.d("ItemsScreen", "todo")
+                    Log.d("ItemsScreen", "add")
+                    onAddItem()
                 },
             ) { Icon(Icons.Rounded.Add, "Add") }
         }
     ) {
-        ItemList(
-            itemList = itemsUiState.items,
-            onItemClick = onItemClick,
-            modifier = Modifier.padding(it)
-        )
+        when (itemsUiState) {
+            is ItemsUiState.Success ->
+                ItemList(
+                    itemList = itemsUiState.items,
+                    onItemClick = onItemClick,
+                    modifier = Modifier.padding(it)
+                )
+
+            is ItemsUiState.Loading -> CircularProgressIndicator(modifier = Modifier.padding(it))
+            is ItemsUiState.Error -> Text(
+                text = "Failed to load items - ${itemsUiState.exception.message}",
+                modifier = Modifier.padding(it)
+            )
+        }
     }
 }
 
 @Preview
 @Composable
 fun PreviewItemsScreen() {
-    ItemsScreen(onItemClick = {})
+    ItemsScreen(onItemClick = {}, onAddItem = {})
 }
