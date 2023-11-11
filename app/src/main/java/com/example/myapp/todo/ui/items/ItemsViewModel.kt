@@ -13,11 +13,12 @@ import com.example.myapp.MyApplication
 import com.example.myapp.core.TAG
 import com.example.myapp.todo.data.Item
 import com.example.myapp.todo.data.ItemRepository
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 sealed interface ItemsUiState {
     data class Success(val items: List<Item>) : ItemsUiState
-    data class Error(val exception: Exception) : ItemsUiState
+    data class Error(val exception: Throwable?) : ItemsUiState
     object Loading : ItemsUiState
 }
 
@@ -31,13 +32,16 @@ class ItemsViewModel(private val itemRepository: ItemRepository) : ViewModel() {
     }
 
     fun loadItems() {
-        Log.d(TAG, "loadItems")
+        Log.d(TAG, "loadItems...")
         viewModelScope.launch {
             uiState = ItemsUiState.Loading
-            uiState = try {
-                ItemsUiState.Success(itemRepository.loadAll())
-            } catch (e: Exception) {
-                ItemsUiState.Error(e)
+            itemRepository.loadAll().stateIn(scope = viewModelScope).collect { result ->
+                Log.d(TAG, "loadItems collect")
+                uiState =
+                    if (result.isSuccess)
+                        ItemsUiState.Success(result.getOrDefault(listOf()))
+                    else
+                        ItemsUiState.Error(result.exceptionOrNull())
             }
         }
     }
