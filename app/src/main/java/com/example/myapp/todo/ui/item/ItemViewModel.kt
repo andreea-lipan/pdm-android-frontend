@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.myapp.MyApplication
+import com.example.myapp.core.Result
 import com.example.myapp.core.TAG
 import com.example.myapp.todo.data.Item
 import com.example.myapp.todo.data.ItemRepository
@@ -18,9 +19,7 @@ import kotlinx.coroutines.launch
 data class ItemUiState(
     val itemId: String? = null,
     val item: Item,
-    val isSaving: Boolean = false,
-    val savingCompleted: Boolean = false,
-    val savingError: Exception? = null,
+    var submitResult: Result<Item>? = null,
 )
 
 class ItemViewModel(private val itemId: String?, private val itemRepository: ItemRepository) :
@@ -38,18 +37,19 @@ class ItemViewModel(private val itemId: String?, private val itemRepository: Ite
         viewModelScope.launch {
             Log.d(TAG, "saveOrUpdateItem...");
             try {
-                uiState = uiState.copy(isSaving = true, savingError = null)
+                uiState = uiState.copy(submitResult = Result.Loading)
                 val item = uiState.item.copy(text = text)
+                val savedItem: Item;
                 if (itemId == null) {
-                    itemRepository.save(item)
+                    savedItem = itemRepository.save(item)
                 } else {
-                    itemRepository.update(item)
+                    savedItem = itemRepository.update(item)
                 }
                 Log.d(TAG, "saveOrUpdateItem succeeeded");
-                uiState = uiState.copy(isSaving = false, savingCompleted = true)
+                uiState = uiState.copy(submitResult = Result.Success(savedItem))
             } catch (e: Exception) {
                 Log.d(TAG, "saveOrUpdateItem failed");
-                uiState = uiState.copy(isSaving = false, savingError = e)
+                uiState = uiState.copy(submitResult = Result.Error(e))
             }
         }
     }

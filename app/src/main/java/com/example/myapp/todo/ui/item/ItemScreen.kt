@@ -25,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapp.R
+import com.example.myapp.core.Result
 import com.example.myapp.todo.ui.item.ItemViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,9 +36,10 @@ fun ItemScreen(itemId: String?, onClose: () -> Unit) {
     var text by rememberSaveable { mutableStateOf(itemUiState.item.text) }
     Log.d("ItemScreen", "recompose, text = $text")
 
-    LaunchedEffect(itemUiState.savingCompleted) {
-        Log.d("ItemScreen", "Saving completed = ${itemUiState.savingCompleted}");
-        if (itemUiState.savingCompleted) {
+    LaunchedEffect(itemUiState.submitResult) {
+        Log.d("ItemScreen", "Submit = ${itemUiState.submitResult}");
+        if (itemUiState.submitResult is Result.Success) {
+            Log.d("ItemScreen", "Closing screen");
             onClose();
         }
     }
@@ -60,6 +62,12 @@ fun ItemScreen(itemId: String?, onClose: () -> Unit) {
                 .padding(it)
                 .fillMaxSize()
         ) {
+            if (itemUiState.submitResult is Result.Loading) {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) { LinearProgressIndicator() }
+            }
             Row {
                 TextField(
                     value = text,
@@ -67,15 +75,9 @@ fun ItemScreen(itemId: String?, onClose: () -> Unit) {
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
-            if (itemUiState.isSaving) {
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) { LinearProgressIndicator() }
-            }
-            if (itemUiState.savingError != null) {
+            if (itemUiState.submitResult is Result.Error) {
                 Text(
-                    text = "Failed to save item - ${itemUiState.savingError.message}",
+                    text = "Failed to submit item - ${(itemUiState.submitResult as Result.Error).exception?.message}",
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
