@@ -2,6 +2,7 @@ package com.example.myapp.todo.data
 
 import android.util.Log
 import com.example.myapp.core.TAG
+import com.example.myapp.core.Result
 import com.example.myapp.todo.data.remote.ItemService
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -18,18 +19,19 @@ class ItemRepository(private val itemService: ItemService) {
 
     suspend fun loadAll(): Flow<Result<List<Item>>> = flow {
         Log.d(TAG, "loadAll started")
+        emit(Result.Loading)
         if (cachedItems.size > 0) {
             Log.d(TAG, "loadAll emit cached items")
-            emit(Result.success(cachedItems as List<Item>))
+            emit(Result.Success(cachedItems as List<Item>))
         }
         while (coroutineContext.isActive) {
             try {
                 val items = itemService.find()
                 cachedItems = items.toMutableList()
                 Log.d(TAG, "loadAll emit remote items")
-                emit(Result.success(cachedItems as List<Item>))
+                emit(Result.Success(cachedItems as List<Item>))
             } catch (e: Exception) {
-                emit(Result.failure(e))
+                emit(Result.Error(e))
             }
             delay(5000)
         }

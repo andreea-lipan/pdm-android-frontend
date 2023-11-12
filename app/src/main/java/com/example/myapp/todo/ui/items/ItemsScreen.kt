@@ -17,6 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapp.R
+import com.example.myapp.core.Result
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,15 +39,15 @@ fun ItemsScreen(onItemClick: (id: String?) -> Unit, onAddItem: () -> Unit) {
         }
     ) {
         when (itemsUiState) {
-            is ItemsUiState.Success ->
+            is Result.Success ->
                 ItemList(
-                    itemList = itemsUiState.items,
+                    itemList = itemsUiState.data,
                     onItemClick = onItemClick,
                     modifier = Modifier.padding(it)
                 )
 
-            is ItemsUiState.Loading -> CircularProgressIndicator(modifier = Modifier.padding(it))
-            is ItemsUiState.Error -> Text(
+            is Result.Loading -> CircularProgressIndicator(modifier = Modifier.padding(it))
+            is Result.Error -> Text(
                 text = "Failed to load items - ${itemsUiState.exception?.message}",
                 modifier = Modifier.padding(it)
             )
