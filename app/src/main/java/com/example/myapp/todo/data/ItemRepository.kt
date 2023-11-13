@@ -28,7 +28,7 @@ class ItemRepository(private val itemService: ItemService, private val itemWsCli
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
 
-    val itemStream: SharedFlow<Result<List<Item>>> = itemsFlow
+    val itemStream: Flow<Result<List<Item>>> = itemsFlow
 
     init {
         Log.d(TAG, "init")
