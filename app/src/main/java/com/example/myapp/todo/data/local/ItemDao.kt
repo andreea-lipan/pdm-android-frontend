@@ -1,11 +1,11 @@
-package com.ilazar.myapp.todo.data.local
+package com.example.myapp.todo.data.local
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.ilazar.myapp.todo.data.Item
+import com.example.myapp.todo.data.Item
 import kotlinx.coroutines.flow.Flow
 
 @Dao
