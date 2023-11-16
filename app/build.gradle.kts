@@ -4,6 +4,14 @@ plugins {
     id("com.google.devtools.ksp")
 }
 
+kotlin {
+    jvmToolchain(8)
+}
+
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
+}
+
 android {
     namespace = "com.example.myapp"
     compileSdk = 34
@@ -41,7 +49,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
+        kotlinCompilerExtensionVersion = "1.5.4"
     }
     packaging {
         resources {
@@ -71,7 +79,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     // Room
     implementation("androidx.room:room-runtime:2.6.0")
-    annotationProcessor("androidx.room:room-compiler:2.6.0")
+    ksp("androidx.room:room-compiler:2.6.0")
     implementation("androidx.room:room-ktx:2.6.0")
 
     testImplementation("junit:junit:4.13.2")
