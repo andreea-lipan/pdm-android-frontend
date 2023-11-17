@@ -1,8 +1,8 @@
 package com.example.myapp.todo.data.remote
 
 import android.util.Log
-import com.example.myapp.core.Api
 import com.example.myapp.core.TAG
+import com.example.myapp.core.data.remote.Api
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import kotlinx.coroutines.Dispatchers
@@ -73,5 +73,18 @@ class ItemWsClient(private val okHttpClient: OkHttpClient) {
             Log.d(TAG, "onMessage bytes $t")
             onFailure()
         }
+    }
+
+    fun authorize(token: String) {
+        val auth = """
+            {
+              "type":"authorization",
+              "payload":{
+                "token": "$token"
+              }
+            }
+        """.trimIndent()
+        Log.d(TAG, "auth $auth")
+        webSocket.send(auth)
     }
 }
