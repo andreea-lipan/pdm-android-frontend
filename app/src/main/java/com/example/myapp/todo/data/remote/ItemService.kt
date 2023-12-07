@@ -10,21 +10,21 @@ import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface ItemService {
-    @GET("/api/item")
+    @GET("/api/beehives")
     suspend fun find(@Header("Authorization") authorization: String): List<Item>
 
-    @GET("/api/item/{id}")
+    @GET("/api/beehives/{id}")
     suspend fun read(
         @Header("Authorization") authorization: String,
         @Path("id") itemId: String?
     ): Item;
 
     @Headers("Content-Type: application/json")
-    @POST("/api/item")
+    @POST("/api/beehives")
     suspend fun create(@Header("Authorization") authorization: String, @Body item: Item): Item
 
     @Headers("Content-Type: application/json")
-    @PUT("/api/item/{id}")
+    @PUT("/api/beehives/{id}")
     suspend fun update(
         @Header("Authorization") authorization: String,
         @Path("id") itemId: String?,

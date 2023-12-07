@@ -36,6 +36,7 @@ class ItemRepository(private val itemService: ItemService, private val itemWsCli
         try {
             items = itemService.find(authorization = getBearerToken())
             Log.d(TAG, "refresh succeeded")
+            Log.d(TAG, items.size.toString())
             itemsFlow.emit(Result.Success(items))
         } catch (e: Exception) {
             Log.w(TAG, "refresh failed", e)
@@ -94,7 +95,7 @@ class ItemRepository(private val itemService: ItemService, private val itemWsCli
         Log.d(TAG, "save $item...")
         val createdItem = itemService.create(item = item, authorization = getBearerToken())
         Log.d(TAG, "save $item succeeded")
-        handleItemCreated(createdItem)
+        //handleItemCreated(createdItem)
         return createdItem
     }
 
