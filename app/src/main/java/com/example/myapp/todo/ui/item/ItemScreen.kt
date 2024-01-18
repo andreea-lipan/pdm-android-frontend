@@ -25,12 +25,15 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapp.R
 import com.example.myapp.core.Result
 import com.example.myapp.todo.ui.item.ItemViewModel
+import com.example.myapp.util.createNotificationChannel
+import com.example.myapp.util.showSimpleNotification
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -72,6 +75,14 @@ fun ItemScreen(itemId: String?, onClose: () -> Unit) {
         }
     }
 
+//    NOTIFICATION
+    val context = LocalContext.current
+    val channelId = "MyTestChannel"
+    val notificationId = 0
+    LaunchedEffect(Unit) {
+        createNotificationChannel(channelId, context)
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -80,6 +91,15 @@ fun ItemScreen(itemId: String?, onClose: () -> Unit) {
                     Button(onClick = {
                         Log.d("ItemScreen", "save item text = $managerName");
                         itemViewModel.saveOrUpdateItem(managerName, index, autumnTreatment, dateCreated)
+
+                        // send notification
+                        showSimpleNotification(
+                            context,
+                            channelId,
+                            notificationId,
+                            "Beehives",
+                            "Changes saved successfully!"
+                        )
                     }) { Text("Save") }
                 }
             )
