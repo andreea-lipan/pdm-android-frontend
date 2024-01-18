@@ -12,7 +12,6 @@ import com.example.myapp.todo.data.local.AppDatabase
 import com.example.myapp.todo.data.remote.ItemService
 import com.example.myapp.todo.data.remote.ItemWsClient
 
-// todo next branch
 val Context.userPreferencesDataStore by preferencesDataStore(
     name = "user_preferences"
 )
@@ -32,7 +31,6 @@ class AppContainer(val context: Context) {
     }
 
 
-    // todo next branch
     private val authDataSource: AuthDataSource = AuthDataSource()
     val authRepository: AuthRepository by lazy {
         AuthRepository(authDataSource)
