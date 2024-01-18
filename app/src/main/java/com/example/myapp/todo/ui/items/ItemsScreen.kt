@@ -1,5 +1,6 @@
 package com.example.myapp.todo.ui.items
 
+import android.app.Application
 import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -15,6 +16,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -22,6 +24,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapp.R
 import com.example.myapp.core.Result
 import com.example.myapp.todo.data.Item
+import com.example.myapp.todo.ui.networkstatus.MyNetworkStatusViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,12 +36,18 @@ fun ItemsScreen(onItemClick: (id: String?) -> Unit, onAddItem: () -> Unit, onLog
         initialValue = listOf()
     )
 
+    val myNewtworkStatusViewModel = viewModel<MyNetworkStatusViewModel>(
+        factory = MyNetworkStatusViewModel.Factory(
+            LocalContext.current.applicationContext as Application
+        )
+    )
+
 
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = stringResource(id = R.string.items)) },
+                title = { Text(text = stringResource(id = R.string.items))},
                 actions = {
                     Button(onClick = onLogout) { Text("Logout") }
                 }
@@ -51,8 +60,12 @@ fun ItemsScreen(onItemClick: (id: String?) -> Unit, onAddItem: () -> Unit, onLog
                     onAddItem()
                 },
             ) { Icon(Icons.Rounded.Add, "Add") }
+        },
+        bottomBar = {
+            Text("Is online: ${myNewtworkStatusViewModel.uiState}")
         }
     ) {
+
         ItemList(
             itemList = itemsUiState,
             onItemClick = onItemClick,
