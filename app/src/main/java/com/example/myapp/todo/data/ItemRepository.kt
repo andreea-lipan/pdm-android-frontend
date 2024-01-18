@@ -94,7 +94,7 @@ class ItemRepository(
         Log.d(TAG, "save $item...")
         val createdItem = itemService.create(item = item, authorization = getBearerToken())
         Log.d(TAG, "save $item succeeded")
-        //handleItemCreated(createdItem)
+        handleItemCreated(createdItem)
         return createdItem
     }
 

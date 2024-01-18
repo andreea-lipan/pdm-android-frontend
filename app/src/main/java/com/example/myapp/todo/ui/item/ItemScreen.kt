@@ -46,6 +46,7 @@ fun ItemScreen(itemId: String?, onClose: () -> Unit) {
     var dateCreated by rememberSaveable { mutableStateOf(itemUiState.item.dateCreated) }
 
 
+    Log.d("index", "index is:  $index");
     Log.d("ItemScreen", "recompose, text = $managerName")
 
     LaunchedEffect(itemUiState.submitResult) {
@@ -64,6 +65,9 @@ fun ItemScreen(itemId: String?, onClose: () -> Unit) {
         }
         if (!(itemUiState.loadResult is Result.Loading)) {
             managerName = itemUiState.item.managerName
+            index = itemUiState.item.index;
+            autumnTreatment = itemUiState.item.autumnTreatment;
+            dateCreated = itemUiState.item.dateCreated;
             textInitialized = true
         }
     }

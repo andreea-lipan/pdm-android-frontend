@@ -54,7 +54,7 @@ fun ItemsScreen(onItemClick: (id: String?) -> Unit, onAddItem: () -> Unit, onLog
         }
     ) {
         ItemList(
-            itemList = (itemsUiState as Result.Success<List<Item>>).data,
+            itemList = itemsUiState,
             onItemClick = onItemClick,
             modifier = Modifier.padding(it)
         )

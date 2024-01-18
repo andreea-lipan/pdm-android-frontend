@@ -6,9 +6,9 @@ import java.time.LocalDate
 
 
 @Entity(tableName = "beehives")
-data class Item(@PrimaryKey val _id: String? = null,
+data class Item(@PrimaryKey  val _id: String = "",
                 val managerName: String = "",
-                val index: Int = 0,
+                 val index: Int = 0,
                 val dateCreated: String = "",
                 val autumnTreatment: Boolean = false
     )
