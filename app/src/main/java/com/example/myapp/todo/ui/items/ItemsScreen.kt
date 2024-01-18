@@ -2,6 +2,7 @@ package com.example.myapp.todo.ui.items
 
 import android.app.Application
 import android.util.Log
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
@@ -25,6 +26,7 @@ import com.example.myapp.R
 import com.example.myapp.core.Result
 import com.example.myapp.todo.data.Item
 import com.example.myapp.todo.ui.networkstatus.MyNetworkStatusViewModel
+import com.example.myapp.util.MyJobsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -36,6 +38,7 @@ fun ItemsScreen(onItemClick: (id: String?) -> Unit, onAddItem: () -> Unit, onLog
         initialValue = listOf()
     )
 
+    // NETWORK STATUS
     val myNewtworkStatusViewModel = viewModel<MyNetworkStatusViewModel>(
         factory = MyNetworkStatusViewModel.Factory(
             LocalContext.current.applicationContext as Application
@@ -43,11 +46,18 @@ fun ItemsScreen(onItemClick: (id: String?) -> Unit, onAddItem: () -> Unit, onLog
     )
 
 
+    // JOBS
+    val myJobsViewModel = viewModel<MyJobsViewModel>(
+        factory = MyJobsViewModel.Factory(
+            LocalContext.current.applicationContext as Application
+        )
+    )
+
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = stringResource(id = R.string.items))},
+                title = { Text(text = stringResource(id = R.string.items)) },
                 actions = {
                     Button(onClick = onLogout) { Text("Logout") }
                 }
@@ -62,7 +72,15 @@ fun ItemsScreen(onItemClick: (id: String?) -> Unit, onAddItem: () -> Unit, onLog
             ) { Icon(Icons.Rounded.Add, "Add") }
         },
         bottomBar = {
-            Text("Is online: ${myNewtworkStatusViewModel.uiState}")
+            Column {
+                Text("Is online: ${myNewtworkStatusViewModel.uiState}")
+                Text(
+                    "${myJobsViewModel.uiState}"
+                )
+                Button(onClick = { myJobsViewModel.cancelJob() }) {
+                    Text("Cancel")
+                }
+            }
         }
     ) {
 

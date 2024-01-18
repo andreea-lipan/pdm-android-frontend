@@ -84,6 +84,9 @@ dependencies {
     implementation("androidx.room:room-ktx:2.6.0")
     // Data store
     implementation("androidx.datastore:datastore-preferences:1.0.0")
+    // work manager
+    implementation("androidx.work:work-runtime-ktx:2.7.1");
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.5.1")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
