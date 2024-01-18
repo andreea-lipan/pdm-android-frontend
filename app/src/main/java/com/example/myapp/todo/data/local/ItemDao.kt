@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ItemDao {
     @Query("SELECT * FROM beehives")
-    fun getAll(): Flow<List<Item>>
+    fun getAll(): Flow<List<Item>> // emite automat noua lista cu noile valori daca inseram ceva
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(item: Item)

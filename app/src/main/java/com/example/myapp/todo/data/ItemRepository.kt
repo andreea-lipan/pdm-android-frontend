@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.myapp.core.Result
 import com.example.myapp.core.TAG
 import com.example.myapp.core.data.remote.Api
+import com.example.myapp.todo.data.local.ItemDao
 import com.example.myapp.todo.data.remote.ItemEvent
 import com.example.myapp.todo.data.remote.ItemService
 import com.example.myapp.todo.data.remote.ItemWsClient
@@ -15,15 +16,14 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.withContext
 
-class ItemRepository(private val itemService: ItemService, private val itemWsClient: ItemWsClient) {
-    private var items: List<Item> = listOf();
+class ItemRepository(
+    private val itemService: ItemService,
+    private val itemWsClient: ItemWsClient,
+    private val itemDao : ItemDao  // baza de date locala
+) {
 
-    private var itemsFlow: MutableSharedFlow<Result<List<Item>>> = MutableSharedFlow(
-        replay = 1,
-        onBufferOverflow = BufferOverflow.DROP_OLDEST
-    )
-
-    val itemStream: Flow<Result<List<Item>>> = itemsFlow
+    val itemStream by lazy { itemDao.getAll() } // codul asta lamba se va executa
+    // item stream poate fi folosi de mai multi consumatori
 
     init {
         Log.d(TAG, "init")
@@ -34,13 +34,12 @@ class ItemRepository(private val itemService: ItemService, private val itemWsCli
     suspend fun refresh() {
         Log.d(TAG, "refresh started")
         try {
-            items = itemService.find(authorization = getBearerToken())
+            val items = itemService.find(authorization = getBearerToken())
+            itemDao.deleteAll()
+            items.forEach{ itemDao.insert(it) }
             Log.d(TAG, "refresh succeeded")
-            Log.d(TAG, items.size.toString())
-            itemsFlow.emit(Result.Success(items))
         } catch (e: Exception) {
             Log.w(TAG, "refresh failed", e)
-            itemsFlow.emit(Result.Error(e))
         }
     }
 
@@ -84,8 +83,8 @@ class ItemRepository(private val itemService: ItemService, private val itemWsCli
 
     suspend fun update(item: Item): Item {
         Log.d(TAG, "update $item...")
-        val updatedItem =
-            itemService.update(itemId = item._id, item = item, authorization = getBearerToken())
+        val updatedItem = itemService.update(itemId = item._id,
+                            item = item, authorization = getBearerToken())
         Log.d(TAG, "update $item succeeded")
         handleItemUpdated(updatedItem)
         return updatedItem
