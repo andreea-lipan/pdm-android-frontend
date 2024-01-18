@@ -14,6 +14,7 @@ import com.example.myapp.core.Result
 import com.example.myapp.core.TAG
 import com.example.myapp.todo.data.Item
 import com.example.myapp.todo.data.ItemRepository
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
@@ -26,16 +27,14 @@ data class ItemUiState(
 
 class ItemViewModel(private val itemId: String?, private val itemRepository: ItemRepository) : ViewModel() {
 
-    var uiState: ItemUiState by mutableStateOf(ItemUiState(loadResult = Result.Loading))
-        private set
+//    var uiState: ItemUiState by mutableStateOf(ItemUiState(loadResult = Result.Loading))
+//        private set
+
+    val uiState: Flow<List<Item>> = itemRepository.itemStream
 
     init {
         Log.d(TAG, "init")
-        if (itemId != null) {
-            loadItem()
-        } else {
-            uiState = uiState.copy(loadResult = Result.Success(Item()))
-        }
+        loadItem()
     }
 
     fun loadItem() {

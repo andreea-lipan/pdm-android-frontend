@@ -27,8 +27,12 @@ import com.example.myapp.todo.data.Item
 @Composable
 fun ItemsScreen(onItemClick: (id: String?) -> Unit, onAddItem: () -> Unit, onLogout: () -> Unit) {
     Log.d("ItemsScreen", "recompose")
+
     val itemsViewModel = viewModel<ItemsViewModel>(factory = ItemsViewModel.Factory)
-    val itemsUiState by itemsViewModel.uiState.collectAsStateWithLifecycle()
+    val itemsUiState by itemsViewModel.uiState.collectAsStateWithLifecycle() //todo check this
+
+
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -47,20 +51,22 @@ fun ItemsScreen(onItemClick: (id: String?) -> Unit, onAddItem: () -> Unit, onLog
             ) { Icon(Icons.Rounded.Add, "Add") }
         }
     ) {
-        when (itemsUiState) {
-            is Result.Success ->
-                ItemList(
-                    itemList = (itemsUiState as Result.Success<List<Item>>).data,
-                    onItemClick = onItemClick,
-                    modifier = Modifier.padding(it)
-                )
+        ItemList(
+            itemList = (itemsUiState as Result.Success<List<Item>>).data,
+            onItemClick = onItemClick,
+            modifier = Modifier.padding(it)
+        )
 
-            is Result.Loading -> CircularProgressIndicator(modifier = Modifier.padding(it))
-            is Result.Error -> Text(
-                text = "Failed to load items - ${(itemsUiState as Result.Error).exception?.message}",
-                modifier = Modifier.padding(it)
-            )
-        }
+//        when (itemsUiState) {
+//            is Result.Success ->
+//
+//
+//            is Result.Loading -> CircularProgressIndicator(modifier = Modifier.padding(it))
+//            is Result.Error -> Text(
+//                text = "Failed to load items - ${(itemsUiState as Result.Error).exception?.message}",
+//                modifier = Modifier.padding(it)
+//            )
+//        }
     }
 }
 

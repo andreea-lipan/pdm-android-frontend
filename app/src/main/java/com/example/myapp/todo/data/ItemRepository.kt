@@ -104,15 +104,14 @@ class ItemRepository(
 
     private suspend fun handleItemUpdated(item: Item) {
         Log.d(TAG, "handleItemUpdated...")
-        items = items.map { if (it._id == item._id) item else it }
-        itemsFlow.emit(Result.Success(items))
+        itemDao.update(item)
     }
 
     private suspend fun handleItemCreated(item: Item) {
         Log.d(TAG, "handleItemCreated...")
-        items = items.plus(item)
-        itemsFlow.emit(Result.Success(items))
+        itemDao.insert(item)
     }
+
 
 //    suspend fun deleteAll() {
 //        itemDao.deleteAll()
