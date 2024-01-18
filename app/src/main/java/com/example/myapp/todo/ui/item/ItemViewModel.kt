@@ -24,8 +24,7 @@ data class ItemUiState(
     var submitResult: Result<Item>? = null,
 )
 
-class ItemViewModel(private val itemId: String?, private val itemRepository: ItemRepository) :
-    ViewModel() {
+class ItemViewModel(private val itemId: String?, private val itemRepository: ItemRepository) : ViewModel() {
 
     var uiState: ItemUiState by mutableStateOf(ItemUiState(loadResult = Result.Loading))
         private set
