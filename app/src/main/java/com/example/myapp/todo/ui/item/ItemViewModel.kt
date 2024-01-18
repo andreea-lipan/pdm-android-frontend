@@ -27,10 +27,8 @@ data class ItemUiState(
 
 class ItemViewModel(private val itemId: String?, private val itemRepository: ItemRepository) : ViewModel() {
 
-//    var uiState: ItemUiState by mutableStateOf(ItemUiState(loadResult = Result.Loading))
-//        private set
-
-    val uiState: Flow<List<Item>> = itemRepository.itemStream
+    var uiState: ItemUiState by mutableStateOf(ItemUiState(loadResult = Result.Loading))
+        private set
 
     init {
         Log.d(TAG, "init")
@@ -39,18 +37,12 @@ class ItemViewModel(private val itemId: String?, private val itemRepository: Ite
 
     fun loadItem() {
         viewModelScope.launch {
-            itemRepository.itemStream.collect { result ->
+            itemRepository.itemStream.collect { beehives ->
                 if (!(uiState.loadResult is Result.Loading)) {
                     return@collect
                 }
-                if (result is Result.Success) {
-                    val items = result.data
-                    val item = items.find { it._id == itemId } ?: Item()
-                    uiState = uiState.copy(loadResult = Result.Success(item), item = item)
-                } else if (result is Result.Error) {
-                    uiState =
-                        uiState.copy(loadResult = Result.Error(result.exception))
-                }
+                val beehive = beehives.find { it._id == itemId } ?: Item()
+                uiState = uiState.copy(item = beehive, loadResult = Result.Success(beehive))
             }
         }
     }
