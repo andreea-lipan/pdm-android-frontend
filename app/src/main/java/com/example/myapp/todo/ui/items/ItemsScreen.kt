@@ -29,7 +29,9 @@ fun ItemsScreen(onItemClick: (id: String?) -> Unit, onAddItem: () -> Unit, onLog
     Log.d("ItemsScreen", "recompose")
 
     val itemsViewModel = viewModel<ItemsViewModel>(factory = ItemsViewModel.Factory)
-    val itemsUiState by itemsViewModel.uiState.collectAsStateWithLifecycle() //todo check this
+    val itemsUiState by itemsViewModel.uiState.collectAsStateWithLifecycle(
+        initialValue = listOf()
+    )
 
 
 
