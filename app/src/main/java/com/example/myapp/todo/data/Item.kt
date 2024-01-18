@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 import java.time.LocalDate
 
 
-@Entity(tableName = "items")
+@Entity(tableName = "beehives")
 data class Item(@PrimaryKey val _id: String? = null,
                 val managerName: String = "",
                 val index: Int = 0,
