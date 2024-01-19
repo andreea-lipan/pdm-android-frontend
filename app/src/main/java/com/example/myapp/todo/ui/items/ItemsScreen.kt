@@ -3,6 +3,12 @@ package com.example.myapp.todo.ui.items
 import android.annotation.SuppressLint
 import android.app.Application
 import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,6 +18,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.TabRow
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
@@ -195,12 +203,40 @@ fun InfoTab() {
         modifier = Modifier.fillMaxSize().padding(16.dp),
         verticalArrangement = Arrangement.Center
     ) {
+        PopUpMessage(shown = myJobsViewModel.uiState.isRunning)
         Text("Network status --> Is online: ${myNewtworkStatusViewModel.uiState}")
         Text(text = "ProximitySensor --> ${proximitySensorViewModel.uiState} cms away")
         Text("Job seconds --> ${myJobsViewModel.uiState.progress}")
         Text("Job done --> ${!myJobsViewModel.uiState.isRunning}")
         Button(onClick = { myJobsViewModel.cancelJob() }) {
             Text("Cancel")
+        }
+    }
+}
+
+
+@Composable
+private fun PopUpMessage(shown: Boolean) {
+    AnimatedVisibility(
+        visible = shown,
+        enter = slideInVertically(
+            initialOffsetY = { fullHeight -> -fullHeight },
+            animationSpec = tween(durationMillis = 150, easing = LinearOutSlowInEasing)
+        ),
+        exit = slideOutVertically(
+            targetOffsetY = { fullHeight -> -fullHeight },
+            animationSpec = tween(durationMillis = 250, easing = FastOutLinearInEasing)
+        )
+    ) {
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            color = MaterialTheme.colors.secondary,
+            elevation = 4.dp
+        ) {
+            androidx.compose.material.Text(
+                text = "Job finished",
+                modifier = Modifier.padding(16.dp)
+            )
         }
     }
 }
