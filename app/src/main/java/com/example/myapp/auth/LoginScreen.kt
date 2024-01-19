@@ -69,7 +69,7 @@ fun LoginScreen(onClose: () -> Unit) {
             if (loginUiState.authenticationError != null) {
                 Text(text = "Login failed ${loginUiState.authenticationError.message}")
             }
-            MyLocation()
+
         }
     }
 
