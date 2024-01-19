@@ -24,6 +24,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapp.R
 import com.example.myapp.todo.ui.networkstatus.MyNetworkStatusViewModel
 import com.example.myapp.util.MyJobsViewModel
+import com.example.myapp.util.proximity.ProximitySensorViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -51,6 +52,13 @@ fun ItemsScreen(onItemClick: (id: String?) -> Unit, onAddItem: () -> Unit, onLog
     )
 
 
+    // PROXIMITY SENSOR
+    val proximitySensorViewModel = viewModel<ProximitySensorViewModel>(
+        factory = ProximitySensorViewModel.Factory(
+            LocalContext.current.applicationContext as Application
+        )
+    )
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -70,13 +78,14 @@ fun ItemsScreen(onItemClick: (id: String?) -> Unit, onAddItem: () -> Unit, onLog
         },
         bottomBar = {
             Column {
-                Text("Is online: ${myNewtworkStatusViewModel.uiState}")
-                Text(
-                    "${myJobsViewModel.uiState}"
-                )
+                Text("Network status --> Is online: ${myNewtworkStatusViewModel.uiState}")
+                Text(text = "ProximitySensor --> ${proximitySensorViewModel.uiState} cms away")
+                Text("Job seconds --> ${myJobsViewModel.uiState.progress}")
+                Text("Job done --> ${!myJobsViewModel.uiState.isRunning}")
                 Button(onClick = { myJobsViewModel.cancelJob() }) {
                     Text("Cancel")
                 }
+
             }
         }
     ) {
