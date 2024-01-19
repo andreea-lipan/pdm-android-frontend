@@ -18,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapp.R
+import com.example.myapp.util.maps.MyLocation
 
 val TAG = "LoginScreen"
 
@@ -68,6 +69,7 @@ fun LoginScreen(onClose: () -> Unit) {
             if (loginUiState.authenticationError != null) {
                 Text(text = "Login failed ${loginUiState.authenticationError.message}")
             }
+            MyLocation()
         }
     }
 

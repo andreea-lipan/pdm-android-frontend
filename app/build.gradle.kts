@@ -70,6 +70,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.material:material:1.3.1")
     // Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
@@ -87,6 +88,16 @@ dependencies {
     // work manager
     implementation("androidx.work:work-runtime-ktx:2.7.1");
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.5.1")
+
+    // permissions
+    implementation("com.google.accompanist:accompanist-permissions:0.23.1")
+
+    // locatie mai precisa google
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+
+    // maps
+    implementation("com.google.maps.android:maps-compose:2.7.2")
+    implementation("com.google.android.gms:play-services-maps:18.1.0")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

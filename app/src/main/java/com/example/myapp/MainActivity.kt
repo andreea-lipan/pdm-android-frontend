@@ -1,5 +1,6 @@
 package com.example.myapp
 
+import android.Manifest
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -10,6 +11,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
 import com.example.myapp.core.TAG
 import com.example.myapp.ui.theme.MyAppTheme
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.ilazar.mycamera.util.Permissions
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -38,12 +41,22 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalPermissionsApi::class)  // pe ca Permissions e experimental
 @Composable
 fun MyApp(content: @Composable () -> Unit) {
     Log.d("MyApp", "recompose")
-    MyAppTheme {
-        Surface {
-            content()
+    Permissions(
+        permissions = listOf(
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ),
+        rationaleText = "Give me location!",
+        dismissedText = "You didn't give me location :("
+    ) {
+        MyAppTheme {
+            Surface {
+                content()
+            }
         }
     }
 }

@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -23,8 +22,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapp.R
-import com.example.myapp.core.Result
-import com.example.myapp.todo.data.Item
 import com.example.myapp.todo.ui.networkstatus.MyNetworkStatusViewModel
 import com.example.myapp.util.MyJobsViewModel
 
@@ -83,12 +80,11 @@ fun ItemsScreen(onItemClick: (id: String?) -> Unit, onAddItem: () -> Unit, onLog
             }
         }
     ) {
-
-        ItemList(
-            itemList = itemsUiState,
-            onItemClick = onItemClick,
-            modifier = Modifier.padding(it)
-        )
+            ItemList(
+                itemList = itemsUiState,
+                onItemClick = onItemClick,
+                modifier = Modifier.padding(it)
+            )
 
 //        when (itemsUiState) {
 //            is Result.Success ->
